@@ -70,7 +70,7 @@ object Parser {
                 items.addAll(readChannel(parser))
             } else {
                 skip(parser)
-            }
+            }readRss
         }
         return items
     }
@@ -99,13 +99,14 @@ object Parser {
         var link: String? = null
         var pubDate: String? = null
         var description: String? = null
+        var downloadLink: String? = null
         parser.require(XmlPullParser.START_TAG, null, "item")
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.eventType != XmlPullParser.START_TAG) {
                 continue
             }
             val name = parser.name
-            if (name == "title") {
+            if (name == "title") {  
                 title = readData(parser, "title")
             } else if (name == "link") {
                 link = readData(parser, "link")
@@ -113,11 +114,13 @@ object Parser {
                 pubDate = readData(parser, "pubDate")
             } else if (name == "description") {
                 description = readData(parser, "description")
+            } else if (name == "guid"){
+                downloadLink = readData(parser, "guid")
             } else {
                 skip(parser)
             }
         }
-        return ItemFeed(title!!, link!!, pubDate!!, description!!, "carregar o link")
+        return ItemFeed(title!!, link!!, pubDate!!, description!!, downloadLink!!)
     }
 
     // Processa tags de forma parametrizada no feed.
