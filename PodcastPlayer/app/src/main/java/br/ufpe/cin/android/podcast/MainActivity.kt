@@ -16,13 +16,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val itemFeedList = downloadRssFeed().execute(R.string.action_download).get()
-
         listRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        listRecyclerView.adapter = ItemFeedAdapter(itemFeedList, this)
+        //listRecyclerView.adapter = ItemFeedAdapter(itemFeedList, this)
 
         listRecyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+
+        downloadRssFeed().execute(R.string.action_download)
     }
 
     internal inner class downloadRssFeed : AsyncTask<Int, Int, List<ItemFeed> >() {
@@ -44,6 +44,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             return ret
+        }
+
+        override fun onPostExecute(result: List<ItemFeed>?) {
+            var itemList: List<ItemFeed>
+
+            if(result != null) {
+                itemList = result
+            } else {
+                itemList = ArrayList<ItemFeed>()
+            }
+
+            listRecyclerView.adapter = ItemFeedAdapter(itemList, applicationContext)
         }
 
         private fun parseRssFeed(feed: String?): List<ItemFeed>{
