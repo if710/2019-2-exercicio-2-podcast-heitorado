@@ -70,7 +70,7 @@ object Parser {
                 items.addAll(readChannel(parser))
             } else {
                 skip(parser)
-            }readRss
+            }
         }
         return items
     }
@@ -106,7 +106,7 @@ object Parser {
                 continue
             }
             val name = parser.name
-            if (name == "title") {  
+            if (name == "title") {
                 title = readData(parser, "title")
             } else if (name == "link") {
                 link = readData(parser, "link")
